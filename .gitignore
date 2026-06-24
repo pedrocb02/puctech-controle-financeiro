@@ -1,0 +1,81 @@
+# ==============================================================================
+# PYTHON
+# ==============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Ambientes virtuais (Venv, Poetry, Conda)
+.venv/
+venv/
+ENV/
+env/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ==============================================================================
+# EDITORES DE CÓDIGO (VS Code e PyCharm)
+# ==============================================================================
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# ==============================================================================
+# STREAMLIT
+# ==============================================================================
+# NUNCA envie suas senhas e chaves de API do Streamlit para o GitHub
+.streamlit/secrets.toml
+
+# Opcional: desarquive a linha abaixo se não quiser subir as configurações de tema/portas
+# .streamlit/config.toml
+
+# ==============================================================================
+# DATA SCIENCE (NumPy e Pandas)
+# ==============================================================================
+# Arquivos de dados costumam ser muito pesados para o Git. 
+# O ideal é salvá-los localmente ou em um storage (S3, Drive, etc.)
+*.csv
+*.xlsx
+*.json
+*.parquet
+*.pkl
+*.pickle
+*.npy
+*.npz
+
+# Pastas comuns para guardar bases de dados locais
+data/
+datasets/
+inputs/
+outputs/
+
+# ==============================================================================
+# SISTEMA OPERACIONAL
+# ==============================================================================
+.DS_Store
+Thumbs.db
