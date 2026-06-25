@@ -8,6 +8,7 @@ class MetaMensal:
         self.mes_ano = mes_ano
     
     def metaAtingida(self, transacao):
+        #retorna um TRUE ou FALSE, caso meta atingida
         return self.valor_limite >= transacao.valor
     
     def getFaltaquanto(self, transacao):
