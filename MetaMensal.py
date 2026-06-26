@@ -1,18 +1,24 @@
 from Transacao import Transacao
-class MetaMensal:
 
-    # categoria diz se é essencial, lazer, alimentação
-    def __init__(self, categoria, valor_limite, mes_ano):
-        self.categoria = categoria
-        self.valor_limite = valor_limite
+class MetaMensal:
+    def __init__(self,  valor_alvo, mes_ano):
+        self.valor_alvo = float(valor_alvo)
+        self.montante = 0.0
         self.mes_ano = mes_ano
+
+    def engordarVacaquinha(self, entrada: Transacao):
+        #oqtemdentrodavaquinha
+        self.montante += entrada.valor
+
+    def emagrecerVaquinha(self, saida: Transacao):
+        if saida.valor <=  self.montante:
+            self.montante -= saida.valor
+            return saida.valor
     
-    def metaAtingida(self, transacao):
-        return self.valor_limite >= transacao.valor
+    def verificarMetaAtingida(self):
+        # Retorna True atingiu a meta
+        return self.montante == self.valor_alvo
     
-    def getFaltaquanto(self, transacao):
-        saida = self.valor_limite - transacao.valor
-        if saida >= 0:
-            return saida
-        else:
-            return 0
+    def getFaltaQuanto(self):
+        # retorna quanto falta
+        return self.valor_alvo - self.montante
