@@ -1,8 +1,7 @@
-
-
 from Transacao import Transacao, TipoTransacao
 from MetaMensal import MetaMensal
 from ContaBancaria import ContaBancaria
+import pandas as pd
 
 class GerenciadorFinanceiro:
     def __init__(self, conta:ContaBancaria):
@@ -11,17 +10,10 @@ class GerenciadorFinanceiro:
         self.conta = conta
 
     #não preciso falar o que isso faz
-    def calcularSaldoGeral(self, transacao: Transacao):
-        if transacao.tipo == 'receita':
-            self.conta.saldo += transacao.valor
-        else:
-            self.conta.saldo -= transacao.valor
-    
-    # adiciona uma transacao recente no historico
     def addTransacao(self, transacao: Transacao):
         self.lista_transacoes.append(transacao)
-        self.calcularSaldoGeral(transacao)
-    
+        self.conta.registrar_transacao(transacao)
+        
     #adiciona uma nova meta na lista
     def addMeta(self, meta:MetaMensal):
         self.lista_metas.append(meta)
@@ -62,3 +54,14 @@ class GerenciadorFinanceiro:
         texto += "=" * 50
 
         return texto
+    
+    def getDistribuicaoGastos(self):
+        dados = [
+            {"Categoria": t.descricao, "Valor": t.valor}
+            for t in self.lista_transacoes
+            if t.tipo == TipoTransacao.DESPESA
+        ]
+        if not dados:
+            return None
+        df = pd.DataFrame(dados)
+        return df.groupby("Categoria")["Valor"].sum().sort_values(ascending=False)
