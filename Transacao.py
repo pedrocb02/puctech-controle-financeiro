@@ -10,3 +10,6 @@ class Transacao:
         self.descricao = descricao
         self.valor = float(valor)
         self.tipo = tipo
+
+    def __str__(self):
+      return str(self.__dict__)
