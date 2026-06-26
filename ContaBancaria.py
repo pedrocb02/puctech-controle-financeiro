@@ -13,3 +13,6 @@ class ContaBancaria:
             self.saldo += transacao.valor
         else:
             self.saldo -= transacao.valor
+
+    def __str__(self):
+      return str(self.__dict__)
