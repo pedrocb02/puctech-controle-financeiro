@@ -1,5 +1,10 @@
-class Transacao:
+from enum import Enum
 
+class TipoTransacao(Enum):
+    RECEITA = "receita"
+    DESPESA = "despesa"
+
+class Transacao:
     #só a criação do construtor bem simples
     def __init__(self, data, descricao, valor, tipo, categoria):
         self.data = data #data da sua transacao
