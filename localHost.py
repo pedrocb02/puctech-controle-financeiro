@@ -3,6 +3,7 @@ from datetime import date
 
 from ContaBancaria import ContaBancaria
 from GerenciadorFinanceiro import GerenciadorFinanceiro
+from MetaMensal import MetaMensal
 from Transacao import Transacao, TipoTransacao
 
 
@@ -127,7 +128,96 @@ def rodar_gui():
 
     elif opcao == "Metas":
         st.header("Metas mensais")
-        st.info("Tela de metas em desenvolvimento.")
+
+        st.subheader("Criar nova meta")
+
+        valor_meta = st.number_input("Valor da meta", min_value=0.01, step=0.01)
+        mes_ano = st.text_input("Mês/Ano", placeholder="Ex: 06/2026")
+
+        if st.button("Criar meta"):
+            if mes_ano.strip() == "":
+                st.error("Digite o mês e o ano.")
+            else:
+                nova_meta = MetaMensal(valor_meta, mes_ano.strip())
+                gerenciador.addMeta(nova_meta)
+
+                st.success("Meta criada com sucesso!")
+                st.rerun()
+
+        st.divider()
+
+        st.subheader("Metas cadastradas")
+
+        if len(gerenciador.lista_metas) == 0:
+            st.info("Nenhuma meta cadastrada.")
+        else:
+            for i, meta in enumerate(gerenciador.lista_metas):
+                st.write(f"### Meta {i + 1}")
+
+                st.write(f"Mês/Ano: {meta.mes_ano}")
+                st.write(f"Valor alvo: R$ {meta.valor_alvo:.2f}")
+                st.write(f"Guardado: R$ {meta.montante:.2f}")
+                st.write(f"Falta: R$ {meta.getFaltaQuanto():.2f}")
+
+                progresso = meta.montante / meta.valor_alvo
+
+                if progresso > 1:
+                    progresso = 1
+
+                st.progress(progresso)
+
+                if meta.montante >= meta.valor_alvo:
+                    st.success("Meta atingida!")
+
+                st.write("Movimentar meta:")
+
+                valor_guardar = st.number_input(
+                    f"Valor para guardar na meta {i + 1}",
+                    min_value=0.01,
+                    step=0.01,
+                    key=f"guardar_{i}"
+                )
+
+                if st.button(f"Guardar na meta {i + 1}", key=f"btn_guardar_{i}"):
+                    if valor_guardar > conta.saldo:
+                        st.error("Você não tem saldo suficiente para guardar esse valor.")
+                    else:
+                        entrada = Transacao(
+                            date.today(),
+                            f"Guardado na meta {meta.mes_ano}",
+                            valor_guardar,
+                            TipoTransacao.DESPESA
+                        )
+
+                        meta.engordarVacaquinha(conta, entrada)
+
+                        st.success("Valor guardado na meta!")
+                        st.rerun()
+
+                valor_retirar = st.number_input(
+                    f"Valor para retirar da meta {i + 1}",
+                    min_value=0.01,
+                    step=0.01,
+                    key=f"retirar_{i}"
+                )
+
+                if st.button(f"Retirar da meta {i + 1}", key=f"btn_retirar_{i}"):
+                    if valor_retirar > meta.montante:
+                        st.error("Essa meta não tem esse valor guardado.")
+                    else:
+                        saida = Transacao(
+                            date.today(),
+                            f"Retirado da meta {meta.mes_ano}",
+                            valor_retirar,
+                            TipoTransacao.RECEITA
+                        )
+
+                        meta.emagrecerVaquinha(conta, saida)
+
+                        st.success("Valor retirado da meta!")
+                        st.rerun()
+
+                st.divider()
 
     elif opcao == "Gráficos":
         st.header("Gráficos")
