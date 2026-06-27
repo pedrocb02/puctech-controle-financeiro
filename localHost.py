@@ -1,5 +1,7 @@
 import streamlit as st
 from datetime import date
+import pandas as pd
+import altair as alt
 
 from ContaBancaria import ContaBancaria
 from GerenciadorFinanceiro import GerenciadorFinanceiro
@@ -221,7 +223,49 @@ def rodar_gui():
 
     elif opcao == "Gráficos":
         st.header("Gráficos")
-        st.info("Tela de gráficos em desenvolvimento.")
+
+        if len(gerenciador.lista_transacoes) == 0:
+            st.info("Nenhuma transação cadastrada.")
+        else:
+            st.subheader("Receitas x Despesas")
+
+            dados_resumo = pd.DataFrame({
+                "Tipo": ["Receitas", "Despesas"],
+                "Valor": [total_receitas, total_despesas]
+            })
+
+            dados_resumo = dados_resumo[dados_resumo["Valor"] > 0]
+
+            if len(dados_resumo) == 0:
+                st.info("Não tem dados suficientes para gerar o gráfico.")
+            else:
+                grafico = alt.Chart(dados_resumo).mark_arc().encode(
+                    theta="Valor",
+                    color="Tipo",
+                    tooltip=["Tipo", "Valor"]
+                )
+
+                st.altair_chart(grafico, use_container_width=True)
+
+            st.divider()
+
+            st.subheader("Distribuição dos gastos")
+
+            gastos = gerenciador.getDistribuicaoGastos()
+
+            if gastos is None:
+                st.info("Nenhuma despesa cadastrada.")
+            else:
+                dados_gastos = gastos.reset_index()
+                dados_gastos.columns = ["Categoria", "Valor"]
+
+                grafico_gastos = alt.Chart(dados_gastos).mark_arc().encode(
+                    theta="Valor",
+                    color="Categoria",
+                    tooltip=["Categoria", "Valor"]
+                )
+
+                st.altair_chart(grafico_gastos, use_container_width=True)
 
 
 if __name__ == "__main__":
