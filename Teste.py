@@ -5,7 +5,7 @@ import GerenciadorFinanceiro
 
 
 
-Salario = Transacao.Transacao("10/05","Tigre",599,"receita")
+Salario = Transacao.Transacao("10/05","Tigre",599,"receita","Lazer")
 
 
 #crio a conta do Daniel
@@ -23,7 +23,7 @@ Moto = MetaMensal.MetaMensal(15000,"06/2026")
 Shadow_Daniel.addMeta(Moto)
 print("\nMeta Moto Daniel: ",Moto)
 
-investimento = Transacao.Transacao("26/06","Investimento pra vaca",599.5,"despesa")
+investimento = Transacao.Transacao("26/06","Investimento pra vaca",599.5,"despesa","Lazer")
 
 Moto.engordarVacaquinha(Conta_Shadow_Daniel,investimento)
 print("\nNOVO SALDO DA VAQUINHA DANIEL: ",Moto)
