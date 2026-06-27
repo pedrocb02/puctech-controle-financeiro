@@ -1,8 +1,9 @@
 import streamlit as st
+from datetime import date
 
 from ContaBancaria import ContaBancaria
 from GerenciadorFinanceiro import GerenciadorFinanceiro
-from Transacao import TipoTransacao
+from Transacao import Transacao, TipoTransacao
 
 
 def rodar_gui():
@@ -57,11 +58,72 @@ def rodar_gui():
 
     if opcao == "Adicionar transação":
         st.header("Adicionar transação")
-        st.info("Tela de cadastro em desenvolvimento.")
+
+        descricao = st.text_input("Descrição / Categoria")
+        valor = st.number_input("Valor", min_value=0.01, step=0.01)
+        data_transacao = st.date_input("Data", value=date.today())
+
+        tipo_escolhido = st.selectbox(
+            "Tipo",
+            ["Receita", "Despesa"]
+        )
+
+        if st.button("Salvar"):
+            if descricao.strip() == "":
+                st.error("Digite uma descrição.")
+            else:
+                if tipo_escolhido == "Receita":
+                    tipo = TipoTransacao.RECEITA
+                else:
+                    tipo = TipoTransacao.DESPESA
+
+                nova_transacao = Transacao(
+                    data_transacao,
+                    descricao.strip(),
+                    valor,
+                    tipo
+                )
+
+                gerenciador.addTransacao(nova_transacao)
+
+                st.success("Transação cadastrada com sucesso!")
+                st.rerun()
 
     elif opcao == "Histórico":
         st.header("Histórico")
-        st.info("Tela de histórico em desenvolvimento.")
+
+        if len(gerenciador.lista_transacoes) == 0:
+            st.info("Nenhuma transação cadastrada.")
+        else:
+            filtro = st.selectbox(
+                "Filtrar",
+                ["Todas", "Receitas", "Despesas"]
+            )
+
+            for transacao in gerenciador.lista_transacoes:
+                mostrar = False
+
+                if filtro == "Todas":
+                    mostrar = True
+                elif filtro == "Receitas" and transacao.tipo == TipoTransacao.RECEITA:
+                    mostrar = True
+                elif filtro == "Despesas" and transacao.tipo == TipoTransacao.DESPESA:
+                    mostrar = True
+
+                if mostrar:
+                    if transacao.tipo == TipoTransacao.RECEITA:
+                        sinal = "+"
+                        tipo_texto = "Receita"
+                    else:
+                        sinal = "-"
+                        tipo_texto = "Despesa"
+
+                    st.write(
+                        f"{transacao.data} | "
+                        f"{transacao.descricao} | "
+                        f"{tipo_texto} | "
+                        f"{sinal} R$ {transacao.valor:.2f}"
+                    )
 
     elif opcao == "Metas":
         st.header("Metas mensais")
