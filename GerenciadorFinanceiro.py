@@ -25,7 +25,22 @@ class GerenciadorFinanceiro:
     #adiciona uma nova meta na lista
     def addMeta(self, meta:MetaMensal):
         self.lista_metas.append(meta)
+    
+    #testando adicao das categorias
+    def gastos_por_categoria(self):
+        gastos = {}
+        for transacao in self.lista_transacoes:
+            if transacao.tipo == TipoTransacao.DESPESA:
+                if transacao.categoria in gastos:
+                    gastos[transacao.categoria] += transacao.valor
+                else:
+                    gastos[transacao.categoria] = transacao.valor
 
+        print("Gastos por categoria:")
+        for categoria, valor in gastos.items():
+            print(f"{categoria}: R$ {valor:.2f}")
+
+            
     def __str__(self):
 
         texto = (
